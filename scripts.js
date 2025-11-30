@@ -1,3 +1,5 @@
+const DOMAIN = 'http://127.0.0.1:5000'
+
 /******************************************************
 * GET COMMENT LIST 
 *******************************************************/
@@ -17,13 +19,42 @@ const getList = async () => {
       console.error('Error:', error);
     });
 }
-/* Init list
+/* INIT LIST
 *>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 getList()
 
 /******************************************************
-* INSERT CARDS LIST
+* CREATE COMMENT
 *******************************************************/
+document.getElementById("commentForm").addEventListener("submit", async function (e) {
+    e.preventDefault(); // impede o envio normal
+
+    const url = DOMAIN + '/create'
+
+    const data = {
+        comment: document.getElementById("comment").value,
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value
+    };
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    createCard('comments', result)
+});
+
+/******************************************************
+* FUNCTIONS
+*******************************************************/
+/* INSERT CARDS LIST
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 function createCard(elementId, commentObj) {
     if (!commentObj) return
 
@@ -79,6 +110,8 @@ function createCard(elementId, commentObj) {
     elementContainer.appendChild(cardEl)
 }
 
+/* FORMAT DATETIME TO RETURN DATE AND TIME VALUES
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 function formatDatetime(datetime) {
     if (!datetime) return { date: '', time: '' }
 

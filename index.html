@@ -24,6 +24,20 @@
                 <!-- Comments cards set by javascript -->
             </section>
 
+            <button class="float_button">Comentar</button>
+            <section class="modal_comments modal">
+                <div class="modal_overlay"></div>
+
+                <form id="commentForm" class="modal_content">
+                    <p>Deixe o seu registro...</p>
+
+                    <textarea form="commentForm" id="comment" placeholder="Faça um comentário" rows="5"></textarea>
+                    <input type="text" id="username" placeholder="Crie um usuário">
+                    <input type="password" id="password" placeholder="Crie uma senha">
+
+                    <button type="submit">Publicar</button>
+                </form>
+            </section>
         </main>
 
         <footer class="footer">
