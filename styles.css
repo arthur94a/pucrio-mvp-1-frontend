@@ -1,0 +1,61 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    /*****************************
+    * COLORS
+    ******************************/
+    /* Purple
+    *>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+    --purple-900: #7f00b2;
+    --purple-700: #8e22bb;
+    --purple-500: #ab49cc;
+    --purple-100: #e5acf8;
+
+    /* Blue
+    *>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+    --blue-400: #1e91ed;
+    --blue-300: #4ca1f5;
+
+    /* Gray
+    *>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+    --gray-700: #474747;
+    --gray-500: #636363;
+
+    /*****************************
+    * PATTERNS
+    ******************************/
+    /* Pattern 1
+    *>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+    --background-1: var(--purple-500);
+    --color-1: white;
+}
+
+.header {
+    padding: 32px 16px;
+    background: var(--background-1);
+    color: var(--color-1);
+}
+
+main {
+    background: var(--purple-100);
+}
+
+.footer {
+    padding: 32px 16px;
+    text-align: center;
+    background: var(--background-1);
+    color: var(--color-1);
+}
+
