@@ -44,12 +44,13 @@ document.getElementById("commentForm").addEventListener("submit", async function
         body: JSON.stringify(data)
     });
 
-    console.log(response)
     if(response.statusText === 'OK') {
         const result = await response.json();
         createCard('comments', result)
         closeModal('modal_create')
     } else {
+        const errors = await response.json();
+        console.log(errors)
         console.log('Card não criado')
     }
 });

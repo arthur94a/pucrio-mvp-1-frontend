@@ -176,10 +176,28 @@ button {
     padding: 0 16px;
 }
 
+.modal::after {
+    position: absolute;
+    top: -48px;
+    right: 12px;
+    content: 'X';
+    width: 32px;
+    height: 32px;
+    font-weight: bold;
+    font-size: 24px;
+    border-radius: 50%;
+    border: 2px solid white;
+    color: white;
+    z-index: 999;
+    font-family: fantasy;
+    line-height: 38px;
+    text-align: center;
+    pointer-events: none;
+}
+
 .modal.open {
     display: block;
 }
-
 
 .modal_overlay {
     position: absolute;
