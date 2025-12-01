@@ -15,7 +15,7 @@
                     <div class="title_container">
                         <img src="./svg/chat.svg" alt="" class="logo" />
                         <h1>Live Chat</h1>
-                        <button class="float_button mobile">Comentar</button>
+                        <button class="float_button mobile" name="open_modal_create">Comentar</button>
                     </div>
                     <p class="header_subtitle desktop">Um chat público, onde é possível gerenciar seus próprios comentários...</p>
                 </section>
@@ -29,8 +29,8 @@
                 <!-- Comments cards set by javascript -->
             </section>
 
-            <button class="float_button">Comentar</button>
-            <section class="modal_comments modal">
+            <button class="float_button" name="open_modal_create">Comentar</button>
+            <section class="modal_comments modal" id="modal_create">
                 <div class="modal_overlay"></div>
 
                 <form id="commentForm" class="modal_content">

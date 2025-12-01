@@ -176,6 +176,10 @@ button {
     padding: 0 16px;
 }
 
+.modal.open {
+    display: block;
+}
+
 
 .modal_overlay {
     position: absolute;

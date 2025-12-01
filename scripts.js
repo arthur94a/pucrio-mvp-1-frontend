@@ -12,7 +12,6 @@ const getList = async () => {
     .then((data) => {
         data.comments.forEach(comment => {
             createCard('comments', comment)
-            console.log(comment)
         })
     })
     .catch((error) => {
@@ -45,10 +44,45 @@ document.getElementById("commentForm").addEventListener("submit", async function
         body: JSON.stringify(data)
     });
 
-    const result = await response.json();
-
-    createCard('comments', result)
+    console.log(response)
+    if(response.statusText === 'OK') {
+        const result = await response.json();
+        createCard('comments', result)
+        closeModal('modal_create')
+    } else {
+        console.log('Card não criado')
+    }
 });
+
+/******************************************************
+* OPEN MODAL
+*******************************************************/
+function handleOpenModalCreate() {
+    const buttons = document.getElementsByName('open_modal_create')
+
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            openModal('modal_create')
+        })
+    })
+}
+
+handleOpenModalCreate()
+
+/******************************************************
+* CLOSE MODAL
+*******************************************************/
+function handleCloseModalCreate() {
+    const overlays = document.querySelectorAll('.modal_overlay')
+
+    overlays.forEach(overlay => {
+        overlay.addEventListener("click", () => {
+            closeModal('modal_create')
+        })
+    })
+}
+
+handleCloseModalCreate()
 
 /******************************************************
 * FUNCTIONS
@@ -120,4 +154,18 @@ function formatDatetime(datetime) {
     time = time.slice(0,8)
 
     return { date, time }
+}
+
+/* OPEN MODAL
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+function openModal(elementId) {
+    const modal = document.getElementById(elementId)
+    modal.classList.add('open')
+}
+
+/* CLOSE MODAL
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+function closeModal(elementId) {
+    const modal = document.getElementById(elementId)
+    modal.classList.remove('open')
 }
