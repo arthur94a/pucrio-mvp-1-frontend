@@ -50,8 +50,14 @@ document.getElementById("commentForm").addEventListener("submit", async function
         closeModal('modal_create')
     } else {
         const errors = await response.json();
-        console.log(errors)
-        console.log('Card não criado')
+        
+        if(errors[0]?.msg) {
+            setModalErrors('comment_form_feedback', errors[0]?.msg)
+        }
+
+        if(errors.error) {
+            setModalErrors('comment_form_feedback', errors.error)
+        }
     }
 });
 
@@ -169,4 +175,11 @@ function openModal(elementId) {
 function closeModal(elementId) {
     const modal = document.getElementById(elementId)
     modal.classList.remove('open')
+}
+
+/* SET MODAL ERRORS
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+function setModalErrors(elementId, error) {
+    const feedback = document.getElementById(elementId)
+    feedback.textContent = error
 }
