@@ -1,26 +1,61 @@
 const DOMAIN = 'http://127.0.0.1:5000'
 
 /******************************************************
-* GET COMMENT LIST 
+* GET COMMENT LIST (INFINITE SCROLL)
 *******************************************************/
+let lastId = null;
+let loading = false;
+
 const getList = async () => {
-  let url = 'http://127.0.0.1:5000/list';
+  if (loading) return;
+  loading = true;
+
+  let url = DOMAIN + '/list';
+  if (lastId !== null) {
+    url += `?last_id=${lastId}`;
+  }
+
   fetch(url, {
     method: 'get',
   })
     .then((response) => response.json())
     .then((data) => {
-        data.comments.forEach(comment => {
-            createCard('comments', comment)
-        })
+
+      if (!data.comments || data.comments.length === 0) {
+        window.removeEventListener('scroll', handleScroll);
+        return;
+      }
+
+      data.comments.forEach(comment => {
+        createCard('comments', comment);
+      });
+
+      lastId = data.comments[data.comments.length - 1].id;
+      loading = false;
     })
     .catch((error) => {
       console.error('Error:', error);
+      loading = false;
     });
+};
+
+/******************************************************
+* SCROLL HANDLER — CARREGA MAIS AO CHEGAR NO FIM
+*******************************************************/
+function handleScroll() {
+  const scrollPosition = window.innerHeight + window.scrollY;
+  const bottom = document.body.offsetHeight - 200;
+
+  if (scrollPosition >= bottom) {
+    getList();
+  }
 }
-/* INIT LIST
-*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-getList()
+
+/******************************************************
+* INIT LIST + EVENTO DE SCROLL
+*******************************************************/
+window.addEventListener('scroll', handleScroll);
+getList();
 
 /******************************************************
 * CREATE COMMENT
@@ -46,7 +81,8 @@ document.getElementById("commentForm").addEventListener("submit", async function
 
     if(response.statusText === 'OK') {
         const result = await response.json();
-        createCard('comments', result)
+        const sectionComment = document.getElementById("comments")
+        sectionComment.prepend(createCard('comments', result, true))
         closeModal('modal_create')
     } else {
         const errors = await response.json();
@@ -96,7 +132,7 @@ handleCloseModalCreate()
 *******************************************************/
 /* INSERT CARDS LIST
 *>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-function createCard(elementId, commentObj) {
+function createCard(elementId, commentObj, newCard = false) {
     if (!commentObj) return
 
     const elementContainer = document.getElementById(elementId)
@@ -148,7 +184,11 @@ function createCard(elementId, commentObj) {
     cardEl.appendChild(contentEl)
     cardEl.appendChild(metadataEl)
     
-    elementContainer.appendChild(cardEl)
+    if (newCard) {
+        elementContainer.prepend(cardEl)
+    } else {
+        elementContainer.appendChild(cardEl)
+    }
 }
 
 /* FORMAT DATETIME TO RETURN DATE AND TIME VALUES
