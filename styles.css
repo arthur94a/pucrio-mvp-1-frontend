@@ -302,3 +302,15 @@ button {
         position: inherit;
     }
 }
+
+/********************************
+* MOBILE
+*********************************/
+/* phone - 470px
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+@media(max-width: 470px) {
+    .card_metadata {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

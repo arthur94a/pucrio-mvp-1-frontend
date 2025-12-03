@@ -57,7 +57,22 @@
                     <textarea form="comment_form" id="edit_comment" placeholder="Faça um comentário" rows="5"></textarea>
                     <input type="password" id="edit_password" placeholder="Informe a senha desse comentário">
 
-                    <button type="submit">Publicar</button>
+                    <button type="submit">Salvar</button>
+                </form>
+            </section>
+
+            <section class="modal_comments modal" id="modal_delete">
+                <div class="modal_overlay"></div>
+
+                <form id="comment_form_delete" class="modal_content">
+                    <input type="hidden" id="delete_card_id" name="user_id">
+
+                    <span class="error field_error" id="delete_comment_form_feedback"></span>
+
+                    <p>Deseja realmente excluir?</p>
+                    <input type="password" id="delete_password" placeholder="Informe a senha para excluir">
+
+                    <button type="submit" id="delete_comment_yes">Confirmar</button>
                 </form>
             </section>
         </main>

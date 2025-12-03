@@ -121,7 +121,6 @@ document.getElementById("comment_form_edit").addEventListener("submit", async fu
     });
 
     if(response.statusText === 'OK') {
-        const result = await response.json();
         replaceCommentCardText(data.id, data.comment)
         closeModal('modal_edit')
     } else {
@@ -133,6 +132,45 @@ document.getElementById("comment_form_edit").addEventListener("submit", async fu
 
         if(errors.error) {
             setModalErrors('edit_comment_form_feedback', errors.error)
+        }
+    }
+})
+
+/******************************************************
+* DELETE COMMENT
+*******************************************************/
+document.getElementById("comment_form_delete").addEventListener("submit", async function (e) {
+    e.preventDefault()
+
+    console.log('clicou')
+
+    const url = DOMAIN + '/delete'
+
+    const data = {
+        id: document.getElementById("delete_card_id").value,
+        password: document.getElementById("delete_password").value
+    };
+
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    if(response.statusText === 'OK') {
+        removeDeletedCard(data.id)
+        closeModal('modal_delete')
+    } else {
+        const errors = await response.json();
+        
+        if(errors[0]?.msg) {
+            setModalErrors('delete_comment_form_feedback', errors[0]?.msg)
+        }
+
+        if(errors.error) {
+            setModalErrors('delete_comment_form_feedback', errors.error)
         }
     }
 })
@@ -163,13 +201,30 @@ function handleOpenModalEdit() {
             const card = editButton.closest('.card_comment');
             const cardText = card.querySelector('.card_text').textContent.trim();
             document.getElementById('edit_comment').value = cardText;
+
             openModal('modal_edit')
+        }
+    })
+}
+
+function handleOpenModalDelete() {
+    const container = document.getElementById('comments');
+
+    container.addEventListener('click', (event) => {
+        const deleteButton = event.target.closest('.card_delete_button');
+
+        if(deleteButton) {
+            const cardId = deleteButton?.dataset.cardId
+            document.getElementById('delete_card_id').value = cardId
+
+            openModal('modal_delete')
         }
     })
 }
 
 handleOpenModalCreate()
 handleOpenModalEdit()
+handleOpenModalDelete()
 
 /******************************************************
 * CLOSE MODAL
@@ -181,6 +236,7 @@ function handleCloseModalCreate() {
         overlay.addEventListener("click", () => {
             closeModal('modal_create')
             closeModal('modal_edit')
+            closeModal('modal_delete')
         })
     })
 }
@@ -213,7 +269,6 @@ function handleClickShowEditCard() {
         createEditButtons(metadata, cardId)
     });
 }
-
 
 /******************************************************
 * FUNCTIONS
@@ -279,6 +334,8 @@ function createCard(elementId, commentObj, newCard = false) {
     } else {
         elementContainer.appendChild(cardEl)
     }
+
+    return cardEl
 }
 
 /* INSERT EDIT BUTTONS
@@ -339,12 +396,16 @@ function setModalErrors(elementId, error) {
 /* REPLACE COMMENT CARD TEXT
 *>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 function replaceCommentCardText(id, newText) {
+    const card = document.getElementById('comment-' + id)
+    const textEl = card.querySelector('.card_text')
+    textEl.textContent = newText
+}
+
+/* REMOVE DELETED CARD
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+function removeDeletedCard(id) {
     const commentId = 'comment-' + id
     const card = document.getElementById(commentId)
 
-    const textElement = card.querySelector('.card_text').textContent = newText
-
-    if (textElement) {
-        textElement.textContent = newText;
-    }
+    card.remove()
 }
