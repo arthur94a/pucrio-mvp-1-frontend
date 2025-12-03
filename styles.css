@@ -19,6 +19,10 @@
     --gray-700: #474747;
     --gray-500: #636363;
 
+    /* Red
+    *>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+    --red: tomato;
+
     /*****************************
     * PATTERNS
     ******************************/
@@ -125,7 +129,7 @@ button {
 * FORM UTILS
 ************************************/
 .error {
-    color: tomato;
+    color: var(--red);
 }
 
 /**********************************
@@ -142,6 +146,7 @@ button {
     max-width: 580px;
     -webkit-box-shadow: 0px 7px 14px -7px #000000; 
     box-shadow: 0px 7px 14px -7px #000000;
+    cursor: pointer;
 }
 
 .card_content {
@@ -159,12 +164,27 @@ button {
     gap: 8px;
     margin-top: 16px;
     font-size: 0.75rem;
-    justify-content: flex-end;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    align-items: flex-end;
 }
 
 .card_datetime {
     display: flex;
     gap: 8px;
+}
+
+.card_edit_buttons_container {
+    display: flex;
+    gap: 24px;
+}
+
+.card_edit_button {
+    background: var(--purple-900);
+}
+
+.card_delete_button {
+    background: var(--red);
 }
 
 /***********************************

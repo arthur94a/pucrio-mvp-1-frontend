@@ -28,6 +28,7 @@ const getList = async () => {
 
       data.comments.forEach(comment => {
         createCard('comments', comment);
+        handleClickShowEditCard()
       });
 
       lastId = data.comments[data.comments.length - 1].id;
@@ -128,6 +129,34 @@ function handleCloseModalCreate() {
 handleCloseModalCreate()
 
 /******************************************************
+* HANDLE CLICK TO SHOW COMMENT EDIT AND DELETE ICONS
+*******************************************************/
+function handleClickShowEditCard() {
+    const container = document.getElementById('comments');
+
+    container.addEventListener('click', (event) => {
+        const card = event.target.closest('.card_comment');
+        const innerCard = event.target.closest('.card_metadata')
+        console.log(innerCard)
+        if (!card) return;
+
+        document.querySelectorAll('.card_comment').forEach(card => {
+            card.classList.remove('show');
+        });
+
+        document.querySelectorAll('.card_edit_buttons_container').forEach(container => {
+            container.remove()
+        })
+
+        card.classList.add('show');
+        
+        const metadata = card.querySelector('.card_metadata');
+        createEditButtons(metadata)
+    });
+}
+
+
+/******************************************************
 * FUNCTIONS
 *******************************************************/
 /* INSERT CARDS LIST
@@ -148,7 +177,9 @@ function createCard(elementId, commentObj, newCard = false) {
 
     let date, time = ''
 
-    const { comment, created_at, updated_at, username } = commentObj
+    const { id, comment, created_at, updated_at, username } = commentObj
+
+    cardEl.setAttribute('id', "comment-" + id)
 
     cardEl.className = 'card_comment'
     contentEl.className = 'card_content'
@@ -189,6 +220,26 @@ function createCard(elementId, commentObj, newCard = false) {
     } else {
         elementContainer.appendChild(cardEl)
     }
+}
+
+/* INSERT EDIT BUTTONS
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+function createEditButtons(element) {
+    const containerEl = document.createElement('div')
+    const editButtonEl = document.createElement('button')
+    const deleteButtonEl = document.createElement('button')
+
+    containerEl.className = 'card_edit_buttons_container'
+    editButtonEl.className = 'card_edit_button'
+    deleteButtonEl.className = 'card_delete_button'
+
+    editButtonEl.textContent = 'Editar'
+    deleteButtonEl.textContent = 'Excluir'
+
+    containerEl.appendChild(editButtonEl)
+    containerEl.appendChild(deleteButtonEl)
+
+    element.appendChild(containerEl)
 }
 
 /* FORMAT DATETIME TO RETURN DATE AND TIME VALUES
