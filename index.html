@@ -33,14 +33,29 @@
             <section class="modal_comments modal" id="modal_create">
                 <div class="modal_overlay"></div>
 
-                <form id="commentForm" class="modal_content">
+                <form id="comment_form" class="modal_content">
                     <p>Deixe o seu registro...</p>
 
                     <span class="error field_error" id="comment_form_feedback"></span>
 
-                    <textarea form="commentForm" id="comment" placeholder="Faça um comentário" rows="5"></textarea>
+                    <textarea form="comment_form" id="comment" placeholder="Faça um comentário" rows="5"></textarea>
                     <input type="text" id="username" placeholder="Crie um usuário">
                     <input type="password" id="password" placeholder="Crie uma senha">
+
+                    <button type="submit">Publicar</button>
+                </form>
+            </section>
+
+            <section class="modal_comments modal" id="modal_edit">
+                <div class="modal_overlay"></div>
+
+                <form id="comment_form_edit" class="modal_content">
+                    <input type="hidden" id="edit_card_id" name="user_id">
+
+                    <span class="error field_error" id="edit_comment_form_feedback"></span>
+
+                    <textarea form="comment_form" id="edit_comment" placeholder="Faça um comentário" rows="5"></textarea>
+                    <input type="password" id="edit_password" placeholder="Informe a senha desse comentário">
 
                     <button type="submit">Publicar</button>
                 </form>

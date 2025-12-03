@@ -61,7 +61,7 @@ getList();
 /******************************************************
 * CREATE COMMENT
 *******************************************************/
-document.getElementById("commentForm").addEventListener("submit", async function (e) {
+document.getElementById("comment_form").addEventListener("submit", async function (e) {
     e.preventDefault(); // impede o envio normal
 
     const url = DOMAIN + '/create'
@@ -99,6 +99,45 @@ document.getElementById("commentForm").addEventListener("submit", async function
 });
 
 /******************************************************
+* EDIT COMMENT
+*******************************************************/
+document.getElementById("comment_form_edit").addEventListener("submit", async function (e) {
+    e.preventDefault()
+
+    const url = DOMAIN + '/update'
+
+    const data = {
+        id: document.getElementById("edit_card_id").value,
+        comment: document.getElementById("edit_comment").value,
+        password: document.getElementById("edit_password").value
+    };
+
+    const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    if(response.statusText === 'OK') {
+        const result = await response.json();
+        replaceCommentCardText(data.id, data.comment)
+        closeModal('modal_edit')
+    } else {
+        const errors = await response.json();
+        
+        if(errors[0]?.msg) {
+            setModalErrors('edit_comment_form_feedback', errors[0]?.msg)
+        }
+
+        if(errors.error) {
+            setModalErrors('edit_comment_form_feedback', errors.error)
+        }
+    }
+})
+
+/******************************************************
 * OPEN MODAL
 *******************************************************/
 function handleOpenModalCreate() {
@@ -111,7 +150,26 @@ function handleOpenModalCreate() {
     })
 }
 
+function handleOpenModalEdit() {
+    const container = document.getElementById('comments');
+
+    container.addEventListener('click', (event) => {
+        const editButton = event.target.closest('.card_edit_button');
+
+        if(editButton) {
+            const cardId = editButton?.dataset.cardId
+            document.getElementById('edit_card_id').value = cardId
+
+            const card = editButton.closest('.card_comment');
+            const cardText = card.querySelector('.card_text').textContent.trim();
+            document.getElementById('edit_comment').value = cardText;
+            openModal('modal_edit')
+        }
+    })
+}
+
 handleOpenModalCreate()
+handleOpenModalEdit()
 
 /******************************************************
 * CLOSE MODAL
@@ -122,6 +180,7 @@ function handleCloseModalCreate() {
     overlays.forEach(overlay => {
         overlay.addEventListener("click", () => {
             closeModal('modal_create')
+            closeModal('modal_edit')
         })
     })
 }
@@ -136,8 +195,8 @@ function handleClickShowEditCard() {
 
     container.addEventListener('click', (event) => {
         const card = event.target.closest('.card_comment');
-        const innerCard = event.target.closest('.card_metadata')
-        console.log(innerCard)
+        const cardId = (card?.id)?.split('-')[1] // get the number id of "comment-id"
+
         if (!card) return;
 
         document.querySelectorAll('.card_comment').forEach(card => {
@@ -149,9 +208,9 @@ function handleClickShowEditCard() {
         })
 
         card.classList.add('show');
-        
+
         const metadata = card.querySelector('.card_metadata');
-        createEditButtons(metadata)
+        createEditButtons(metadata, cardId)
     });
 }
 
@@ -224,7 +283,7 @@ function createCard(elementId, commentObj, newCard = false) {
 
 /* INSERT EDIT BUTTONS
 *>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-function createEditButtons(element) {
+function createEditButtons(element, cardId) {
     const containerEl = document.createElement('div')
     const editButtonEl = document.createElement('button')
     const deleteButtonEl = document.createElement('button')
@@ -232,6 +291,8 @@ function createEditButtons(element) {
     containerEl.className = 'card_edit_buttons_container'
     editButtonEl.className = 'card_edit_button'
     deleteButtonEl.className = 'card_delete_button'
+    editButtonEl.dataset.cardId = cardId
+    deleteButtonEl.dataset.cardId = cardId
 
     editButtonEl.textContent = 'Editar'
     deleteButtonEl.textContent = 'Excluir'
@@ -273,4 +334,17 @@ function closeModal(elementId) {
 function setModalErrors(elementId, error) {
     const feedback = document.getElementById(elementId)
     feedback.textContent = error
+}
+
+/* REPLACE COMMENT CARD TEXT
+*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+function replaceCommentCardText(id, newText) {
+    const commentId = 'comment-' + id
+    const card = document.getElementById(commentId)
+
+    const textElement = card.querySelector('.card_text').textContent = newText
+
+    if (textElement) {
+        textElement.textContent = newText;
+    }
 }
